@@ -1,0 +1,34 @@
+# The initial Unicode character used.
+# This value will be incremented by 1 each time a new character is needed during the transformation.
+initial-char: "\uE000"
+
+# Properties of the resource pack that will be generated.
+resource-pack:
+  # Name of the resource pack.
+  name: "custom-resource-pack"
+  # Version of the resource pack.
+  version: 22
+  # Description of the resource pack.
+  description: "A custom resource pack."
+  # The namespace in which the assets will be stored.
+  namespace: "minecraft"
+
+# Declare backgrounds here.
+backgrounds:
+  # The unique id of the background.
+  - id: "background-1"
+    # The name of the background image including the extension.
+    # The image must be placed in the 'background' folder.
+    image: "background.png"
+    # Set true if the background is dynamic, false otherwise.
+    # Optional and set to false by default.
+    dynamic: false
+
+# Declare backgrounds here.
+images:
+  # The unique id of the image.
+  - id: "image-1"
+    # The name of the image including the extension.
+    # The image must be placed in the 'images' folder.
+    image: "img.png"
+    type: "FULLSCREEN"
