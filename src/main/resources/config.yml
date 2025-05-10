@@ -1,0 +1,38 @@
+# The initial Unicode character used.
+# This value will be incremented by 1 each time a new character is needed during the transformation.
+initial-char: "\uE000"
+
+# Properties of the resource pack that will be generated.
+resource-pack:
+  # Name of the resource pack.
+  name: "custom-resource-pack"
+  # Version of the resource pack.
+  version: 22
+  # Description of the resource pack.
+  description: "A custom resource pack."
+  # The namespace in which the assets will be stored.
+  namespace: "custom"
+
+# Declare backgrounds here.
+backgrounds:
+    # The unique id of the background.
+    # Note: This id will be used as the file name in the resource pack.
+  - id: "background-1"
+    # The name of the background image including the extension.
+    # The image must be placed in the 'backgrounds' folder.
+    image: "background.png"
+    # Set true if the background is dynamic, false otherwise.
+    # Optional and set to false by default.
+    dynamic: false
+
+# Declare backgrounds here.
+images:
+    # The unique id of the image.
+    # Note:This id will be used as the file name in the resource pack.
+  - id: "image-1"
+    # The name of the image including the extension.
+    # The image must be placed in the 'images' folder.
+    image: "image.png"
+    # The way the image will be rendered.
+    # Available types: FULLSCREEN, SCREEN_CENTERED.
+    type: "FULLSCREEN"
