@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 public class ResourcePackGenerator {
 
-    private static final String RESOURCE_PACKS_FOLDER_NAME = "resourcepack";
+    private static final String RESOURCE_PACK_FOLDER_NAME = "resourcepack";
     private static final String IMAGES_FOLDER_NAME = "images";
     private static final String BACKGROUNDS_FOLDER_NAME = "backgrounds";
     private static final String PACK_MCMETA_FILE_NAME = "pack.mcmeta";
@@ -36,10 +36,7 @@ public class ResourcePackGenerator {
     }
 
     public ResourcePackGenerationResult generate() throws IOException {
-
-        // Initializing the generation parameters.
-        char initialChar = this.config.initialChar().charAt(0);
-        this.generationState = new GenerationState(initialChar);
+        this.init();
 
         // Creating the initial resource pack folders structure.
         this.createResourcePacksFolder();
@@ -60,13 +57,14 @@ public class ResourcePackGenerator {
         return new ResourcePackGenerationResult(images, backgrounds);
     }
 
+    private void init() {
+        char initialChar = this.config.initialChar().charAt(0);
+        this.generationState = new GenerationState(initialChar);
+    }
+
     private void createResourcePacksFolder() throws IOException {
-
         Path folder = this.getResourcePacksFolder();
-
-        if (!Files.isDirectory(folder)) {
-            Files.createDirectory(folder);
-        }
+        Files.createDirectories(folder);
     }
 
     private void generateResourcePackStructure(ResourcePackConfig config) throws IOException {
@@ -175,7 +173,7 @@ public class ResourcePackGenerator {
     }
 
     private Path getResourcePacksFolder() {
-        return Paths.get("./" + RESOURCE_PACKS_FOLDER_NAME);
+        return Paths.get("./" + RESOURCE_PACK_FOLDER_NAME);
     }
 
     private Path getResourcePackFolder(ResourcePackConfig config) {
