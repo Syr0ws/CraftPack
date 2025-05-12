@@ -2,8 +2,7 @@ package com.github.syr0ws.craftpack.resourcepack;
 
 import com.github.syr0ws.craftpack.config.BackgroundConfig;
 import com.github.syr0ws.craftpack.config.ResourcePackConfig;
-import com.github.syr0ws.craftpack.resourcepack.model.Background;
-import com.github.syr0ws.craftpack.resourcepack.model.CharacterProvider;
+import com.github.syr0ws.craftpack.resourcepack.model.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -44,14 +43,26 @@ public class BackgroundGenerator extends ImageFontGenerator {
             throw new IOException("Background '%s''s height and width must be multiple of %d".formatted(backgroundFile, BACKGROUND_SIZE));
         }
 
-        List<CharacterProvider> providers = new ArrayList<>();
+        // Generating the background.
+        Background background = config.dynamic() ? this.generateDynamicBackground(config) : this.generateFixedBackground(config);
 
+        // Copying the file into the resource pack.
         String fileName = config.backgroundId() + ".png";
+        Path output = Paths.get(outputFolder + File.separator + fileName);
+        Files.copy(backgroundFile, output);
+
+        return background;
+    }
+
+    private Background generateFixedBackground(BackgroundConfig config) {
+
+        List<CharacterProvider> providers = new ArrayList<>();
         int initialAscent = 16;
 
         for (int i = 0; i < MAX_ROWS; i++) {
 
             // Generating the character provider associated with the background.
+            String fileName = config.backgroundId() + ".png";
             int ascent = initialAscent - (i * BACKGROUND_SIZE);
             char character = this.state.getNextChar();
 
@@ -61,10 +72,31 @@ public class BackgroundGenerator extends ImageFontGenerator {
             providers.add(provider);
         }
 
-        // Copying the file into the resource pack.
-        Path output = Paths.get(outputFolder + File.separator + fileName);
-        Files.copy(backgroundFile, output);
+        return new FixedBackground(config.backgroundId(), BACKGROUND_SIZE, providers);
+    }
 
-        return new Background(config.backgroundId(), BACKGROUND_SIZE, config.dynamic(), providers);
+    private Background generateDynamicBackground(BackgroundConfig config) {
+
+        List<Frame> frames = new ArrayList<>();
+        String fileName = config.backgroundId() + ".png";
+
+        for(int ascent = 0; ascent < 512; ascent += config.step()) {
+
+            List<CharacterProvider> providers = new ArrayList<>();
+
+            for(int row = 0; row < MAX_ROWS; row++) {
+
+                char character = this.state.getNextChar();
+
+                CharacterProvider provider = super.getProvider(
+                        this.config.namespace(), fileName, ascent, BACKGROUND_SIZE, character);
+
+                providers.add(provider);
+            }
+
+            frames.add(new Frame(providers));
+        }
+
+        return new DynamicBackground(config.backgroundId(), BACKGROUND_SIZE, config.step(), frames);
     }
 }

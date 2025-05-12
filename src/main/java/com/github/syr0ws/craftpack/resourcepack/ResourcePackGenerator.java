@@ -150,7 +150,7 @@ public class ResourcePackGenerator {
             ResourcePackConfig config = this.config.resourcePack();
             Path outFolder = this.getFontTexturesFolder(config);
 
-            BackgroundGenerator generator = new BackgroundGenerator(this.config.resourcePack(), this.generationState);
+            BackgroundGenerator generator = new BackgroundGenerator(config, this.generationState);
             Background background = generator.generate(backgroundConfig, backgroundPath, outFolder);
 
             backgrounds.add(background);

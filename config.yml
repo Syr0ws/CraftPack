@@ -22,7 +22,8 @@ backgrounds:
     image: "background.png"
     # Set true if the background is dynamic, false otherwise.
     # Optional and set to false by default.
-    dynamic: false
+    dynamic: true
+    step: 2
 
 # Declare backgrounds here.
 images:
