@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackgroundGenerator extends ImageFontGenerator {
+public class BackgroundGenerator extends ImageGenerator {
 
     private static final int BACKGROUND_SIZE = 128;
     private static final int MAX_ROWS = 4;

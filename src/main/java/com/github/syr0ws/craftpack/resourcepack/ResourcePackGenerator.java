@@ -116,7 +116,7 @@ public class ResourcePackGenerator {
             ResourcePackConfig config = this.config.resourcePack();
             Path outFolder = this.getFontTexturesFolder(config);
 
-            ImageGenerator generator = new ImageGenerator(this.config.resourcePack(), this.generationState);
+            BitmapGenerator generator = new BitmapGenerator(this.config.resourcePack(), this.generationState);
             Image image = generator.generate(imageConfig, imagePath, outFolder);
 
             images.add(image);
