@@ -7,6 +7,7 @@ import com.github.syr0ws.craftpack.config.Config;
 import com.github.syr0ws.craftpack.config.ImageConfig;
 import com.github.syr0ws.craftpack.config.ResourcePackConfig;
 import com.github.syr0ws.craftpack.resourcepack.model.*;
+import com.github.syr0ws.craftpack.util.FileUtil;
 import com.github.syr0ws.craftpack.util.ImageTile;
 import com.github.syr0ws.craftpack.util.Util;
 import org.apache.commons.io.FileUtils;
@@ -43,6 +44,7 @@ public class ResourcePackGenerator {
         // Creating the initial resource pack folders structure.
         this.createResourcePacksFolder();
         this.generateResourcePackStructure(this.config.resourcePack());
+        this.copyNegativeSpaceAssets();
 
         // Images generation.
         List<Image> images = this.generateResourcePackImages();
@@ -199,6 +201,16 @@ public class ResourcePackGenerator {
         Path fontFile = Paths.get(folder + File.separator + FONT_PROVIDER_FILE_NAME);
 
         Files.writeString(fontFile, json);
+    }
+
+    private void copyNegativeSpaceAssets() throws IOException {
+
+        Path namespace = Paths.get(this.getResourcePackFolder(this.config.resourcePack()) + "/assets/space");
+        Files.createDirectories(namespace);
+
+        FileUtil.copyResource("negative-space/assets/default.json", Paths.get(namespace + "/font/default.json"));
+        FileUtil.copyResource("negative-space/assets/en_us.json", Paths.get(namespace + "/lang/en_us.json"));
+        FileUtil.copyResource("negative-space/assets/splitter.png", Paths.get(namespace + "/textures/font/splitter.png"));
     }
 
     private Path getResourcePacksFolder() {
