@@ -4,6 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public record CraftSlideImagesConfig(@JsonProperty("images") List<CraftSlideImageConfig> images) {
+public record ImagesConfig(@JsonProperty("images") List<ImageConfig> images) {
 
 }

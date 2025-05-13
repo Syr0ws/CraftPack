@@ -15,7 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class CraftSlideConfigGenerator {
+public class ConfigGenerator {
 
     private static final String OUTPUT_FOLDER_NAME = "craftslide";
     private static final String IMAGES_FILE_NAME = "images.yml";
@@ -39,8 +39,8 @@ public class CraftSlideConfigGenerator {
 
     private void generateCraftSlideImagesConfig(List<Image> images) throws IOException {
 
-        List<CraftSlideImageConfig> configs = images.stream()
-                .map(image -> new CraftSlideImageConfig(
+        List<ImageConfig> configs = images.stream()
+                .map(image -> new ImageConfig(
                         image.imageId(),
                         image.tileWidth(),
                         image.rows(),
@@ -50,7 +50,7 @@ public class CraftSlideConfigGenerator {
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-        String content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(new CraftSlideImagesConfig(configs));
+        String content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(new ImagesConfig(configs));
         content = Util.removeCharsDoubleSlash(content);
 
         Path outputFile = this.getOutputFile(IMAGES_FILE_NAME);
@@ -59,8 +59,8 @@ public class CraftSlideConfigGenerator {
 
     private void generateCraftSlideBackgroundsConfig(List<Background> backgrounds) throws IOException {
 
-        List<CraftSlideBackgroundConfig> configs = backgrounds.stream()
-                .map(background -> new CraftSlideBackgroundConfig(
+        List<FixedBackgroundConfig> configs = backgrounds.stream()
+                .map(background -> new FixedBackgroundConfig(
                         background.backgroundId(),
                         background.height(),
                         background.providers().stream().map(provider -> provider.chars().get(0)).toList()
@@ -68,7 +68,7 @@ public class CraftSlideConfigGenerator {
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-        String content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(new CraftSlideBackgroundsConfig(configs));
+        String content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(new BackgroundsConfig(configs));
         content = Util.removeCharsDoubleSlash(content);
 
         Path outputFile = this.getOutputFile(BACKGROUNDS_FILE_NAME);

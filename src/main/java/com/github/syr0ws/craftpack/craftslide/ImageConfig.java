@@ -1,0 +1,12 @@
+package com.github.syr0ws.craftpack.craftslide;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.List;
+
+public record ImageConfig(@JsonProperty("image-id") String imageId,
+                          @JsonProperty("tile-width") int tileWidth,
+                          @JsonProperty("rows") int rows,
+                          @JsonProperty("columns") int columns,
+                          @JsonProperty("chars") List<String> chars) {
+}
