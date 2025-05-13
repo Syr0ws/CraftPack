@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.github.syr0ws.craftpack.resourcepack.ResourcePackGenerationResult;
 import com.github.syr0ws.craftpack.resourcepack.model.Background;
+import com.github.syr0ws.craftpack.resourcepack.model.DynamicBackground;
+import com.github.syr0ws.craftpack.resourcepack.model.FixedBackground;
 import com.github.syr0ws.craftpack.resourcepack.model.Image;
 import com.github.syr0ws.craftpack.util.Util;
 import org.apache.commons.io.FileUtils;
@@ -23,8 +25,8 @@ public class ConfigGenerator {
 
     public void generate(ResourcePackGenerationResult result) throws IOException {
         this.createOutputFolder();
-        this.generateCraftSlideImagesConfig(result.images());
-        this.generateCraftSlideBackgroundsConfig(result.backgrounds());
+        this.generateImagesConfig(result.images());
+        this.generateBackgroundsConfig(result.backgrounds());
     }
 
     private void createOutputFolder() throws IOException {
@@ -37,16 +39,11 @@ public class ConfigGenerator {
         }
     }
 
-    private void generateCraftSlideImagesConfig(List<Image> images) throws IOException {
+    private void generateImagesConfig(List<Image> images) throws IOException {
 
         List<ImageConfig> configs = images.stream()
-                .map(image -> new ImageConfig(
-                        image.imageId(),
-                        image.tileWidth(),
-                        image.rows(),
-                        image.columns(),
-                        image.providers().stream().map(provider -> provider.chars().get(0)).toList()
-                )).toList();
+                .map(ImageConfig::from)
+                .toList();
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
@@ -57,14 +54,11 @@ public class ConfigGenerator {
         Files.writeString(outputFile, content);
     }
 
-    private void generateCraftSlideBackgroundsConfig(List<Background> backgrounds) throws IOException {
+    private void generateBackgroundsConfig(List<Background> backgrounds) throws IOException {
 
-        List<FixedBackgroundConfig> configs = backgrounds.stream()
-                .map(background -> new FixedBackgroundConfig(
-                        background.backgroundId(),
-                        background.height(),
-                        background.providers().stream().map(provider -> provider.chars().get(0)).toList()
-                )).toList();
+        List<BackgroundConfig> configs = backgrounds.stream()
+                .map(this::generateBackgroundsConfig)
+                .toList();
 
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
@@ -73,6 +67,18 @@ public class ConfigGenerator {
 
         Path outputFile = this.getOutputFile(BACKGROUNDS_FILE_NAME);
         Files.writeString(outputFile, content);
+    }
+
+    private BackgroundConfig generateBackgroundsConfig(Background background) {
+
+        // Not the best option but as we only have two background types, it is the easiest.
+        if(background instanceof FixedBackground config) {
+            return FixedBackgroundConfig.from(config);
+        } else if(background instanceof DynamicBackground config) {
+            return DynamicBackgroundConfig.from(config);
+        } else {
+            throw new IllegalArgumentException("Background type not supported");
+        }
     }
 
     private Path getOutputFile(String fileName) {

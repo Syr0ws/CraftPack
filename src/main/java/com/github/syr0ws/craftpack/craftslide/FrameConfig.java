@@ -4,6 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public record BackgroundsConfig(@JsonProperty("backgrounds") List<BackgroundConfig> backgrounds) {
+public record FrameConfig(@JsonProperty("chars") List<String> chars) {
 
 }
