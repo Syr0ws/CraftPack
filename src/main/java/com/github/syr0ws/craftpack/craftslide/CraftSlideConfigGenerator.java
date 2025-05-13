@@ -42,7 +42,7 @@ public class CraftSlideConfigGenerator {
         List<CraftSlideImageConfig> configs = images.stream()
                 .map(image -> new CraftSlideImageConfig(
                         image.imageId(),
-                        image.tileHeight(),
+                        image.tileWidth(),
                         image.rows(),
                         image.columns(),
                         image.providers().stream().map(provider -> provider.chars().get(0)).toList()

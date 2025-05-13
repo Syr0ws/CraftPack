@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public record CraftSlideBackgroundConfig(@JsonProperty("background-id") String backgroundId,
-                                         @JsonProperty("height") int height,
+                                         @JsonProperty("tile-width") int tileWidth,
                                          @JsonProperty("chars") List<String> chars) {
 }
