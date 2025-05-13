@@ -2,7 +2,7 @@ package com.github.syr0ws.craftpack;
 
 import com.github.syr0ws.craftpack.config.Config;
 import com.github.syr0ws.craftpack.config.ConfigLoader;
-import com.github.syr0ws.craftpack.craftslide.CraftSlideConfigGenerator;
+import com.github.syr0ws.craftpack.craftslide.ConfigGenerator;
 import com.github.syr0ws.craftpack.resourcepack.ResourcePackGenerationResult;
 import com.github.syr0ws.craftpack.resourcepack.ResourcePackGenerator;
 
@@ -27,7 +27,7 @@ public class Main {
             ResourcePackGenerationResult result = resourcePackGenerator.generate();
             LOGGER.log(Level.INFO, "The resource pack has been successfully generated");
 
-            CraftSlideConfigGenerator craftSlideConfigGenerator = new CraftSlideConfigGenerator();
+            ConfigGenerator craftSlideConfigGenerator = new ConfigGenerator();
             craftSlideConfigGenerator.generate(result);
             LOGGER.log(Level.INFO, "CraftSlide configuration files have been successfully generated");
 

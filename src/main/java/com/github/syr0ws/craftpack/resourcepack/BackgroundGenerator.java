@@ -6,15 +6,13 @@ import com.github.syr0ws.craftpack.resourcepack.model.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BackgroundGenerator extends ImageFontGenerator {
+public class BackgroundGenerator extends BitmapGenerator {
 
     private static final int BACKGROUND_SIZE = 128;
     private static final int MAX_ROWS = 4;
@@ -27,7 +25,7 @@ public class BackgroundGenerator extends ImageFontGenerator {
         this.state = state;
     }
 
-    public Background generate(BackgroundConfig config, Path backgroundFile, Path outputFolder) throws IOException {
+    public Background generate(BackgroundConfig config, Path backgroundFile) throws IOException {
 
         // Checking that the image is a png file.
         String mimeType = Files.probeContentType(backgroundFile);
@@ -39,19 +37,16 @@ public class BackgroundGenerator extends ImageFontGenerator {
         BufferedImage image = ImageIO.read(backgroundFile.toFile());
 
         // Checking that the image can be cut into squared tiles.
-        if (image.getHeight() % BACKGROUND_SIZE != 0 || image.getWidth() % BACKGROUND_SIZE != 0) {
-            throw new IOException("Background '%s''s height and width must be multiple of %d".formatted(backgroundFile, BACKGROUND_SIZE));
+        if (image.getHeight() % BACKGROUND_SIZE != 0) {
+            throw new IOException("File '%s' has a height which is not a multiple of %d".formatted(backgroundFile, BACKGROUND_SIZE));
+        }
+
+        if (image.getWidth() % BACKGROUND_SIZE != 0) {
+            throw new IOException("File '%s' has a width which is not a multiple of %d".formatted(backgroundFile, BACKGROUND_SIZE));
         }
 
         // Generating the background.
-        Background background = config.dynamic() ? this.generateDynamicBackground(config) : this.generateFixedBackground(config);
-
-        // Copying the file into the resource pack.
-        String fileName = config.backgroundId() + ".png";
-        Path output = Paths.get(outputFolder + File.separator + fileName);
-        Files.copy(backgroundFile, output);
-
-        return background;
+        return config.dynamic() ? this.generateDynamicBackground(config) : this.generateFixedBackground(config);
     }
 
     private Background generateFixedBackground(BackgroundConfig config) {
@@ -66,7 +61,7 @@ public class BackgroundGenerator extends ImageFontGenerator {
             int ascent = initialAscent - (i * BACKGROUND_SIZE);
             char character = this.state.getNextChar();
 
-            CharacterProvider provider = super.getProvider(
+            CharacterProvider provider = super.createProvider(
                     this.config.namespace(), fileName, ascent, BACKGROUND_SIZE, character);
 
             providers.add(provider);
@@ -80,15 +75,15 @@ public class BackgroundGenerator extends ImageFontGenerator {
         List<Frame> frames = new ArrayList<>();
         String fileName = config.backgroundId() + ".png";
 
-        for(int ascent = 0; ascent < 512; ascent += config.step()) {
+        for (int ascent = 0; ascent < 512; ascent += config.step()) {
 
             List<CharacterProvider> providers = new ArrayList<>();
 
-            for(int row = 0; row < MAX_ROWS; row++) {
+            for (int row = 0; row < MAX_ROWS; row++) {
 
                 char character = this.state.getNextChar();
 
-                CharacterProvider provider = super.getProvider(
+                CharacterProvider provider = super.createProvider(
                         this.config.namespace(), fileName, ascent, BACKGROUND_SIZE, character);
 
                 providers.add(provider);

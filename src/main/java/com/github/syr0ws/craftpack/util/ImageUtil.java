@@ -11,8 +11,12 @@ public class ImageUtil {
         int height = image.getHeight();
         int width = image.getWidth();
 
-        if (height % tileSize != 0 || width % tileSize != 0) {
-            throw new IllegalArgumentException("Image height and width must be divisible by tile size");
+        if (height % tileSize != 0) {
+            throw new IllegalArgumentException("Image height %d is not divisible by the tile size %d".formatted(height, tileSize));
+        }
+
+        if (width % tileSize != 0) {
+            throw new IllegalArgumentException("Image width %d is not divisible by the tile size %d".formatted(height, tileSize));
         }
 
         int rows = height / tileSize;
