@@ -27,7 +27,7 @@ public class BackgroundGenerator extends BitmapGenerator {
         this.state = state;
     }
 
-    public Background generate(BackgroundConfig config, Path backgroundFile, Path outputFolder) throws IOException {
+    public Background generate(BackgroundConfig config, Path backgroundFile) throws IOException {
 
         // Checking that the image is a png file.
         String mimeType = Files.probeContentType(backgroundFile);
@@ -39,19 +39,16 @@ public class BackgroundGenerator extends BitmapGenerator {
         BufferedImage image = ImageIO.read(backgroundFile.toFile());
 
         // Checking that the image can be cut into squared tiles.
-        if (image.getHeight() % BACKGROUND_SIZE != 0 || image.getWidth() % BACKGROUND_SIZE != 0) {
-            throw new IOException("Background '%s''s height and width must be multiple of %d".formatted(backgroundFile, BACKGROUND_SIZE));
+        if(image.getHeight() % BACKGROUND_SIZE != 0) {
+            throw new IOException("File '%s' has a height which is not a multiple of %d".formatted(backgroundFile, BACKGROUND_SIZE));
+        }
+
+        if (image.getWidth() % BACKGROUND_SIZE != 0) {
+            throw new IOException("File '%s' has a width which is not a multiple of %d".formatted(backgroundFile, BACKGROUND_SIZE));
         }
 
         // Generating the background.
-        Background background = config.dynamic() ? this.generateDynamicBackground(config) : this.generateFixedBackground(config);
-
-        // Copying the file into the resource pack.
-        String fileName = config.backgroundId() + ".png";
-        Path output = Paths.get(outputFolder + File.separator + fileName);
-        Files.copy(backgroundFile, output);
-
-        return background;
+        return config.dynamic() ? this.generateDynamicBackground(config) : this.generateFixedBackground(config);
     }
 
     private Background generateFixedBackground(BackgroundConfig config) {

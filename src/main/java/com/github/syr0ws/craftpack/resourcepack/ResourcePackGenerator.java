@@ -152,6 +152,7 @@ public class ResourcePackGenerator {
             return Collections.emptyList();
         }
 
+        BackgroundGenerator generator = new BackgroundGenerator(this.config.resourcePack(), this.generationState);
         List<Background> backgrounds = new ArrayList<>();
 
         for (BackgroundConfig backgroundConfig : this.config.backgrounds()) {
@@ -163,16 +164,26 @@ public class ResourcePackGenerator {
                 continue;
             }
 
-            ResourcePackConfig config = this.config.resourcePack();
-            Path outFolder = this.getFontTexturesFolder(config);
-
-            BackgroundGenerator generator = new BackgroundGenerator(config, this.generationState);
-            Background background = generator.generate(backgroundConfig, backgroundPath, outFolder);
-
+            Background background = this.generateResourcePackBackground(generator, backgroundConfig, backgroundPath);
             backgrounds.add(background);
         }
 
         return backgrounds;
+    }
+
+    private Background generateResourcePackBackground(BackgroundGenerator generator, BackgroundConfig backgroundConfig, Path backgroundFile) throws IOException {
+
+        Background background = generator.generate(backgroundConfig, backgroundFile);
+
+        // Copying the file into the resource pack.
+        String fileName = "%s.png".formatted(backgroundConfig.backgroundId());
+
+        Path outFolder = this.getFontTexturesFolder(this.config.resourcePack());
+        Path output = Paths.get(outFolder + File.separator + fileName);
+
+        Files.copy(backgroundFile, output);
+
+        return background;
     }
 
     private void createFontFile(List<CharacterProvider> providers) throws IOException {
