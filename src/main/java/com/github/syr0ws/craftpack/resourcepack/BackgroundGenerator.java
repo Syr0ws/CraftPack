@@ -66,7 +66,7 @@ public class BackgroundGenerator extends ImageFontGenerator {
             int ascent = initialAscent - (i * BACKGROUND_SIZE);
             char character = this.state.getNextChar();
 
-            CharacterProvider provider = super.getProvider(
+            CharacterProvider provider = super.createProvider(
                     this.config.namespace(), fileName, ascent, BACKGROUND_SIZE, character);
 
             providers.add(provider);
@@ -88,7 +88,7 @@ public class BackgroundGenerator extends ImageFontGenerator {
 
                 char character = this.state.getNextChar();
 
-                CharacterProvider provider = super.getProvider(
+                CharacterProvider provider = super.createProvider(
                         this.config.namespace(), fileName, ascent, BACKGROUND_SIZE, character);
 
                 providers.add(provider);

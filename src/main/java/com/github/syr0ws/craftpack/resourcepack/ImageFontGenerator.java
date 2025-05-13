@@ -7,7 +7,7 @@ import java.util.List;
 
 public abstract class ImageFontGenerator {
 
-    protected CharacterProvider getProvider(String namespace, String fileId, int ascent, int height, char c) {
+    protected CharacterProvider createProvider(String namespace, String fileId, int ascent, int height, char c) {
 
         String file = "%s:font/%s".formatted(namespace, fileId);
         String unicode = String.format("\\u%04x", (int) c);

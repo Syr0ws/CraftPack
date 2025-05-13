@@ -62,7 +62,7 @@ public class ImageGenerator extends ImageFontGenerator {
             int ascent = initialAscent - (tile.row() * height);
             char character = this.state.getNextChar();
 
-            CharacterProvider provider = super.getProvider(
+            CharacterProvider provider = super.createProvider(
                     this.config.namespace(), tileFileName, ascent, height, character);
 
             providers.add(provider);
