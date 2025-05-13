@@ -104,7 +104,7 @@ public class ResourcePackGenerator {
             return Collections.emptyList();
         }
 
-        BitmapGenerator generator = new BitmapGenerator(this.config.resourcePack(), this.generationState);
+        ImageGenerator generator = new ImageGenerator(this.config.resourcePack(), this.generationState);
         List<Image> images = new ArrayList<>();
 
         for (ImageConfig imageConfig : this.config.images()) {
@@ -123,7 +123,7 @@ public class ResourcePackGenerator {
         return images;
     }
 
-    private Image generateResourcePackImage(BitmapGenerator generator, ImageConfig imageConfig, Path imagePath) throws IOException {
+    private Image generateResourcePackImage(ImageGenerator generator, ImageConfig imageConfig, Path imagePath) throws IOException {
 
         Image image = generator.generate(imageConfig, imagePath);
         Path outFolder = this.getFontTexturesFolder(this.config.resourcePack());
