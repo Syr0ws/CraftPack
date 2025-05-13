@@ -29,7 +29,7 @@ public class BitmapGenerator extends ImageGenerator {
         this.state = state;
     }
 
-    public Image generate(ImageConfig config, Path imageFile, Path outputFolder) throws IOException {
+    public Image generate(ImageConfig config, Path imageFile) throws IOException {
 
         // Checking that the image is a png file.
         String mimeType = Files.probeContentType(imageFile);
@@ -41,16 +41,24 @@ public class BitmapGenerator extends ImageGenerator {
         BufferedImage image = ImageIO.read(imageFile.toFile());
 
         // Checking that the image can be cut into squared tiles.
-        if (image.getHeight() % TILE_SIZE != 0 || image.getWidth() % TILE_SIZE != 0) {
-            throw new IOException("Image '%s''s height and width must be multiple of %d".formatted(imageFile, TILE_SIZE));
+        if(image.getHeight() % TILE_SIZE != 0) {
+            throw new IOException("File '%s' has a height which is not a multiple of %d".formatted(imageFile, TILE_SIZE));
         }
 
+        if (image.getWidth() % TILE_SIZE != 0) {
+            throw new IOException("File '%s' has a width which is not a multiple of %d".formatted(imageFile, TILE_SIZE));
+        }
+
+        // Cutting the image into squared tiles.
         List<ImageTile> tiles = ImageUtil.cutIntoTiles(image, TILE_SIZE);
 
-        // Generating the resources pack.
+        // Generating character providers for the resource pack.
         List<CharacterProvider> providers = new ArrayList<>();
 
-        int height = TILE_SIZE / 2;
+        // Dividing by 2 to get a better image quality.
+        int charHeight = TILE_SIZE / 2;
+        int charWidth = TILE_SIZE / 2;
+
         int initialAscent = config.type().getInitialAscent();
 
         for (int i = 0; i < tiles.size(); i++) {
@@ -59,20 +67,18 @@ public class BitmapGenerator extends ImageGenerator {
 
             // Generating the character provider associated with the tile.
             String tileFileName = "%s-%d.png".formatted(config.imageId(), i + 1);
-            int ascent = initialAscent - (tile.row() * height);
+            int ascent = initialAscent - (tile.row() * charHeight);
             char character = this.state.getNextChar();
 
             CharacterProvider provider = super.createProvider(
-                    this.config.namespace(), tileFileName, ascent, height, character);
+                    this.config.namespace(), tileFileName, ascent, charHeight, character);
 
             providers.add(provider);
-
-            // Copying the file into the resource pack.
-            Path output = Paths.get(outputFolder + File.separator + tileFileName);
-            ImageIO.write(tile.image(), "png", output.toFile());
         }
 
-        return new Image(config.imageId(), config.type(), height, image.getHeight() / TILE_SIZE,
-                image.getWidth() / TILE_SIZE, providers);
+        int rows = image.getHeight() / TILE_SIZE;
+        int columns = image.getWidth() / TILE_SIZE;
+
+        return new Image(config.imageId(), tiles, config.type(), charHeight, charWidth, rows, columns, providers);
     }
 }

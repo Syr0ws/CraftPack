@@ -7,9 +7,11 @@ import com.github.syr0ws.craftpack.config.Config;
 import com.github.syr0ws.craftpack.config.ImageConfig;
 import com.github.syr0ws.craftpack.config.ResourcePackConfig;
 import com.github.syr0ws.craftpack.resourcepack.model.*;
+import com.github.syr0ws.craftpack.util.ImageTile;
 import com.github.syr0ws.craftpack.util.Util;
 import org.apache.commons.io.FileUtils;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -98,10 +100,11 @@ public class ResourcePackGenerator {
         Path imagesFolder = this.getImagesFolder();
 
         if (!Files.isDirectory(imagesFolder)) {
-            Main.LOGGER.log(Level.WARNING, "Folder '%s' cannot be found. Skipping phase".formatted(imagesFolder));
+            Main.LOGGER.log(Level.WARNING, "Folder '%s' does not exist. Skipping phase".formatted(imagesFolder));
             return Collections.emptyList();
         }
 
+        BitmapGenerator generator = new BitmapGenerator(this.config.resourcePack(), this.generationState);
         List<Image> images = new ArrayList<>();
 
         for (ImageConfig imageConfig : this.config.images()) {
@@ -109,20 +112,35 @@ public class ResourcePackGenerator {
             Path imagePath = this.getImageFile(imageConfig.image());
 
             if (Files.notExists(imagePath)) {
-                Main.LOGGER.log(Level.WARNING, "File '%s' cannot be found. Skipping".formatted(imagePath));
+                Main.LOGGER.log(Level.WARNING, "File '%s' does not exist. Skipping".formatted(imagePath));
                 continue;
             }
 
-            ResourcePackConfig config = this.config.resourcePack();
-            Path outFolder = this.getFontTexturesFolder(config);
-
-            BitmapGenerator generator = new BitmapGenerator(this.config.resourcePack(), this.generationState);
-            Image image = generator.generate(imageConfig, imagePath, outFolder);
-
+            Image image = this.generateResourcePackImage(generator, imageConfig, imagePath);
             images.add(image);
         }
 
         return images;
+    }
+
+    private Image generateResourcePackImage(BitmapGenerator generator, ImageConfig imageConfig, Path imagePath) throws IOException {
+
+        Image image = generator.generate(imageConfig, imagePath);
+        Path outFolder = this.getFontTexturesFolder(this.config.resourcePack());
+
+        // Copying tiles into the resource pack.
+        for(int i = 0; i < image.tiles().size(); i++) {
+
+            ImageTile tile = image.tiles().get(i);
+
+            // Copying the file into the resource pack.
+            String tileFileName = "%s-%d.png".formatted(imageConfig.imageId(), i+1);
+
+            Path output = Paths.get(outFolder + File.separator + tileFileName);
+            ImageIO.write(tile.image(), "png", output.toFile());
+        }
+
+        return image;
     }
 
     private List<Background> generateResourcePackBackgrounds() throws IOException {
@@ -130,7 +148,7 @@ public class ResourcePackGenerator {
         Path backgroundsFolder = this.getBackgroundsFolder();
 
         if (!Files.isDirectory(backgroundsFolder)) {
-            Main.LOGGER.log(Level.WARNING, "Folder '%s' cannot be found. Skipping phase".formatted(backgroundsFolder));
+            Main.LOGGER.log(Level.WARNING, "Folder '%s' does not exist. Skipping phase".formatted(backgroundsFolder));
             return Collections.emptyList();
         }
 
@@ -141,7 +159,7 @@ public class ResourcePackGenerator {
             Path backgroundPath = this.getBackgroundFile(backgroundConfig.image());
 
             if (Files.notExists(backgroundPath)) {
-                Main.LOGGER.log(Level.WARNING, "File '%s' cannot be found. Skipping".formatted(backgroundPath));
+                Main.LOGGER.log(Level.WARNING, "File '%s' does not exist. Skipping".formatted(backgroundPath));
                 continue;
             }
 
