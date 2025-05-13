@@ -72,9 +72,9 @@ public class ConfigGenerator {
     private BackgroundConfig generateBackgroundsConfig(Background background) {
 
         // Not the best option but as we only have two background types, it is the easiest.
-        if(background instanceof FixedBackground config) {
+        if (background instanceof FixedBackground config) {
             return FixedBackgroundConfig.from(config);
-        } else if(background instanceof DynamicBackground config) {
+        } else if (background instanceof DynamicBackground config) {
             return DynamicBackgroundConfig.from(config);
         } else {
             throw new IllegalArgumentException("Background type not supported");

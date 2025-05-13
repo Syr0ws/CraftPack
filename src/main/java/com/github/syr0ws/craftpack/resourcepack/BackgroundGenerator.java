@@ -6,11 +6,9 @@ import com.github.syr0ws.craftpack.resourcepack.model.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class BackgroundGenerator extends BitmapGenerator {
         BufferedImage image = ImageIO.read(backgroundFile.toFile());
 
         // Checking that the image can be cut into squared tiles.
-        if(image.getHeight() % BACKGROUND_SIZE != 0) {
+        if (image.getHeight() % BACKGROUND_SIZE != 0) {
             throw new IOException("File '%s' has a height which is not a multiple of %d".formatted(backgroundFile, BACKGROUND_SIZE));
         }
 
@@ -77,11 +75,11 @@ public class BackgroundGenerator extends BitmapGenerator {
         List<Frame> frames = new ArrayList<>();
         String fileName = config.backgroundId() + ".png";
 
-        for(int ascent = 0; ascent < 512; ascent += config.step()) {
+        for (int ascent = 0; ascent < 512; ascent += config.step()) {
 
             List<CharacterProvider> providers = new ArrayList<>();
 
-            for(int row = 0; row < MAX_ROWS; row++) {
+            for (int row = 0; row < MAX_ROWS; row++) {
 
                 char character = this.state.getNextChar();
 

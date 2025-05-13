@@ -131,12 +131,12 @@ public class ResourcePackGenerator {
         Path outFolder = this.getFontTexturesFolder(this.config.resourcePack());
 
         // Copying tiles into the resource pack.
-        for(int i = 0; i < image.tiles().size(); i++) {
+        for (int i = 0; i < image.tiles().size(); i++) {
 
             ImageTile tile = image.tiles().get(i);
 
             // Copying the file into the resource pack.
-            String tileFileName = "%s-%d.png".formatted(imageConfig.imageId(), i+1);
+            String tileFileName = "%s-%d.png".formatted(imageConfig.imageId(), i + 1);
 
             Path output = Paths.get(outFolder + File.separator + tileFileName);
             ImageIO.write(tile.image(), "png", output.toFile());
@@ -259,7 +259,7 @@ public class ResourcePackGenerator {
 
         public char getNextChar() {
 
-            if(this.currentChar == '\uF8FF') {
+            if (this.currentChar == '\uF8FF') {
                 throw new IllegalStateException("Upper bound character \\uF8FF has been reached and there is no character left");
             }
 

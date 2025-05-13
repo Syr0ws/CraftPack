@@ -39,7 +39,7 @@ public class ImageGenerator extends BitmapGenerator {
         BufferedImage image = ImageIO.read(imageFile.toFile());
 
         // Checking that the image can be cut into squared tiles.
-        if(image.getHeight() % TILE_SIZE != 0) {
+        if (image.getHeight() % TILE_SIZE != 0) {
             throw new IOException("File '%s' has a height which is not a multiple of %d".formatted(imageFile, TILE_SIZE));
         }
 

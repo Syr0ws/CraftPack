@@ -5,6 +5,7 @@ import com.github.syr0ws.craftpack.util.ImageTile;
 
 import java.util.List;
 
-public record Image(String imageId, List<ImageTile> tiles, ImageType type, int tileHeight, int tileWidth, int rows, int columns, List<CharacterProvider> providers) {
+public record Image(String imageId, List<ImageTile> tiles, ImageType type, int tileHeight, int tileWidth, int rows,
+                    int columns, List<CharacterProvider> providers) {
 
 }

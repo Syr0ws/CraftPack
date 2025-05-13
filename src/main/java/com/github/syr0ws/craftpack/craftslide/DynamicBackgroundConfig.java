@@ -2,7 +2,6 @@ package com.github.syr0ws.craftpack.craftslide;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.syr0ws.craftpack.resourcepack.model.DynamicBackground;
-import com.github.syr0ws.craftpack.resourcepack.model.Frame;
 
 import java.util.List;
 
